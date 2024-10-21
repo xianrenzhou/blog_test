@@ -69,6 +69,132 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-yolo-v9运行实录" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/10/21/yolo-v9%E8%BF%90%E8%A1%8C%E5%AE%9E%E5%BD%95/" class="article-date">
+  <time class="dt-published" datetime="2024-10-21T13:34:14.000Z" itemprop="datePublished">2024-10-21</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2024/10/21/yolo-v9%E8%BF%90%E8%A1%8C%E5%AE%9E%E5%BD%95/">yolo v9运行实录</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1>怎样运行yolo v9</h1>
+<h2 id="简介">简介</h2>
+<p>yolo v9 是最新发布的yolo模型，一句话总结：比前代更好，更快，更强。</p>
+<p>本文旨在用最简单的方法吧yolov9的代码跑起来，因此不涉及训练部分，仅教会大家怎么使用yolov9的官方权重进行图像检测。</p>
+<h2 id="准备">准备</h2>
+<p>某些网址可能无法打开，建议全程加速器环境下载</p>
+<ol>
+<li>git工具 <a target="_blank" rel="noopener" href="https://git-scm.com/download/win">Git - Downloading Package (git-scm.com)</a></li>
+<li>miniconda 虚拟环境软件，也可以使用anaconda , 只是miniconda 更加轻量化。[Index of /anaconda/miniconda/ | 清华大学开源软件镜像站 | Tsinghua Open Source Mirror](<a target="_blank" rel="noopener" href="https://mirrors.tuna.tsinghua.edu.cn/anaconda/miniconda/">https://mirrors.tuna.tsinghua.edu.cn/anaconda/miniconda/</a></li>
+</ol>
+<p>注意下载软件要选择合适的版本，主要是x86和arm版本软件记得区分，一般intel的cpu使用x64版本</p>
+<p><img src="https://pics.zhouimage.top/pic/202406061807279.png" alt="image-20240606180754233"></p>
+<h2 id="git安装-可选">git安装(可选)</h2>
+<p>1.双击安装包安装</p>
+<p><img src="https://pics.zhouimage.top/pic/202406061808633.png" alt="image-20240606180844600"></p>
+<p>2.一直点击下一步</p>
+<p><img src="https://pics.zhouimage.top/pic/202406061810837.png" alt="image-20240606181024808"></p>
+<p>3.验证一下安装成功没有，windows+R键，左下角输入cmd,进入命令行</p>
+<p><img src="https://pics.zhouimage.top/pic/202406061811142.png" alt="image-20240606181149124"></p>
+<p>在命令行中输入<code>git -v</code>，显示出git版本号就是安装成功：</p>
+<p><img src="https://pics.zhouimage.top/pic/202406061812756.png" alt="image-20240606181247738"></p>
+<h2 id="miniconda安装">miniconda安装</h2>
+<p>双击安装包安装，一直点击下一步，不过我们需要<strong>记住安装路径</strong>。后面需要用到。</p>
+<p><img src="https://pics.zhouimage.top/pic/202406061825863.png" alt="image-20240606182526842"></p>
+<p>安装可能需要一段时间：</p>
+<p><img src="C:/Users/XIANR/AppData/Roaming/Typora/typora-user-images/image-20240606182633969.png" alt="image-20240606182633969"></p>
+<p><img src="https://pics.zhouimage.top/pic/202406061827343.png" alt="image-20240606182703322"></p>
+<p>把上图两个钩取消然后点击finish即可。</p>
+<p>安装完成之后需要配置环境变量，在windows搜索栏搜索环境变量</p>
+<p><img src="https://pics.zhouimage.top/pic/202406061828757.png" alt="image-20240606182844704"></p>
+<p>点进去选择<img src="https://pics.zhouimage.top/pic/202406061829516.png" alt="image-20240606182927476"></p>
+<p>点进去，新建3个环境变量：</p>
+<p><code>C:\Users\XIANR\miniconda3</code></p>
+<p><code>C:\Users\XIANR\miniconda3\Library\bin</code></p>
+<p><code>C:\Users\XIANR\miniconda3\Scripts</code></p>
+<p>注意，上面三个变量中的<code>C:\Users\XIANR\miniconda3</code>自行替换为你的安装路径，如，小明的安装路径在D:\miniconda3，那小明的三个环境变量就是：</p>
+<p><code>D:\miniconda3</code></p>
+<p><code>D:\miniconda3\Library\bin</code></p>
+<p><code>D:\miniconda3\Scripts</code></p>
+<p>配置完成后如下：</p>
+<p><img src="https://pics.zhouimage.top/pic/202406061834993.png" alt="image-20240606183449970"></p>
+<p>点击三次确定保存</p>
+<p>然后windows+r打开CMD,输入<code>conda -V</code>出现Conda版本号即为安装成功</p>
+<p><img src="https://pics.zhouimage.top/pic/202406061836886.png" alt="image-20240606183647866"></p>
+<h2 id="新建python环境">新建python环境</h2>
+<p>在cmd中 输入<code>conda create -n yolo python=3.9</code>，等待一段时间后，出现下面界面，输入y</p>
+<p><img src="https://pics.zhouimage.top/pic/202406061840206.png" alt="image-20240606184033184"></p>
+<p>注意：如果下载缓慢请开加速器</p>
+<p>出现如下提示即创建环境成功：</p>
+<p><img src="https://pics.zhouimage.top/pic/202406061841910.png" alt="image-20240606184146890"></p>
+<p>然后输入 <code>conda init</code>关掉cmd再次打开，输入<code>conda activate yolo</code>，当左边出现yolo字样的时候，我们的python环境就创建成功了。</p>
+<p><img src="https://pics.zhouimage.top/pic/202406061843805.png" alt="image-20240606184327785"></p>
+<h2 id="yolo源码下载">yolo源码下载</h2>
+<h3 id="如果你在第一步安装了git">如果你在第一步安装了git</h3>
+<p>新建一个文件夹用来存放源码，在文件管理器的地址栏输入CMD,回车，会在当前建立的文件夹下打开CMD</p>
+<p><img src="https://pics.zhouimage.top/pic/202406061846663.png" alt="image-20240606184605628"></p>
+<p><img src="https://pics.zhouimage.top/pic/202406061847565.png" alt="image-20240606184724543"></p>
+<p>输入<code>git clone https://github.com/WongKinYiu/yolov9.git</code></p>
+<p><img src="https://pics.zhouimage.top/pic/202406061849810.png" alt="image-20240606184939785"></p>
+<p>此时在文件夹中已经出现了yolov9的代码</p>
+<p><img src="https://pics.zhouimage.top/pic/202406061850386.png" alt="image-20240606185052364"></p>
+<h3 id="如果你没安装git">如果你没安装git</h3>
+<p>在 <a target="_blank" rel="noopener" href="https://github.com/WongKinYiu/yolov9">https://github.com/WongKinYiu/yolov9</a> 中自行下载源码后解压即可。</p>
+<h2 id="python包安装">python包安装</h2>
+<p>进入源码文件夹，在地址栏输入cmd进入命令行</p>
+<p><img src="https://pics.zhouimage.top/pic/202406061853115.png" alt="image-20240606185324091"></p>
+<p>在命令行输入 <code>conda activate yolo</code></p>
+<p><img src="https://pics.zhouimage.top/pic/202406061854300.png" alt="image-20240606185449273"></p>
+<h3 id="如果你有加速器">如果你有加速器</h3>
+<p>输入命令 <code>pip install -r requirements.txt</code></p>
+<h3 id="如果你没加速器">如果你没加速器</h3>
+<p>输入命令 <code>pip install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple</code></p>
+<p>此时会自动下载依赖并安装，可能需要等待很长时间。</p>
+<p><img src="https://pics.zhouimage.top/pic/202406061856934.png" alt="image-20240606185647908"></p>
+<p>当出现successfuly 的时候，就成功了！如果你报错了，请重新来一遍，这是配环境的过程中难以避免的。</p>
+<p><img src="https://pics.zhouimage.top/pic/202406061902343.png" alt="image-20240606190249283"></p>
+<h2 id="下载预训练权重包">下载预训练权重包</h2>
+<p>在 <a target="_blank" rel="noopener" href="https://github.com/WongKinYiu/yolov9/releases">https://github.com/WongKinYiu/yolov9/releases</a> 里下载预训练模型，随便挑一个pt为后缀的，下载完后，<a target="_blank" rel="noopener" href="http://xn--yolo-uh5fn22agl5a.pt">改名为yolo.pt</a>，放到代码目录下</p>
+<p><img src="https://pics.zhouimage.top/pic/202406061911955.png" alt="image-20240606191130927"></p>
+<h2 id="运行">运行</h2>
+<p>恭喜你来到这一步，接下来就是激动的运行时间了。</p>
+<p>我们首先可以找几张图片放在yolo的data/images文件夹中</p>
+<p><img src="https://pics.zhouimage.top/pic/202406061904604.png" alt="image-20240606190420581"></p>
+<p>回到yolo代码主目录，打开cmd.</p>
+<p>然后在命令行中输入 <code>python detect.py</code> 等待一会，出现下图结果即运行成功</p>
+<p><img src="https://pics.zhouimage.top/pic/202406061913172.png" alt="image-20240606191333147"></p>
+<p>图中显示我们的结果在 <code> runs\detect\exp2</code>文件夹中，打开文件夹即可看到结果：</p>
+<p><img src="https://pics.zhouimage.top/pic/202406061915147.png" alt="image-20240606191515123"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2024/10/21/yolo-v9%E8%BF%90%E8%A1%8C%E5%AE%9E%E5%BD%95/" data-id="cm2j2762f000270p6a0o4edi1" data-title="yolo v9运行实录" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-测试第2篇文章" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2024/10/21/%E6%B5%8B%E8%AF%95%E7%AC%AC2%E7%AF%87%E6%96%87%E7%AB%A0/" class="article-date">
@@ -188,7 +314,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2024/10/21/%E6%B5%8B%E8%AF%95%E7%AC%AC2%E7%AF%87%E6%96%87%E7%AB%A0/" data-id="cm2iynd0600011sp6blecfhh9" data-title="测试第2篇文章" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2024/10/21/%E6%B5%8B%E8%AF%95%E7%AC%AC2%E7%AF%87%E6%96%87%E7%AB%A0/" data-id="cm2j2762e000170p6gg9001ww" data-title="测试第2篇文章" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -226,7 +352,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2024/10/21/%E6%B5%8B%E8%AF%95%E7%AC%AC%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0/" data-id="cm2iynd0700021sp630s8er2e" data-title="测试第一篇文章" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2024/10/21/%E6%B5%8B%E8%AF%95%E7%AC%AC%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0/" data-id="cm2j2762g000370p6exgqc4bp" data-title="测试第一篇文章" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -278,7 +404,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2024/10/21/hello-world/" data-id="cm2iynd0100001sp67vwehskk" data-title="Hello World" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2024/10/21/hello-world/" data-id="cm2j2762b000070p6dgxa62pr" data-title="Hello World" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -319,6 +445,10 @@
     <h3 class="widget-title">Recent Posts</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2024/10/21/yolo-v9%E8%BF%90%E8%A1%8C%E5%AE%9E%E5%BD%95/">yolo v9运行实录</a>
+          </li>
         
           <li>
             <a href="/2024/10/21/%E6%B5%8B%E8%AF%95%E7%AC%AC2%E7%AF%87%E6%96%87%E7%AB%A0/">测试第2篇文章</a>
